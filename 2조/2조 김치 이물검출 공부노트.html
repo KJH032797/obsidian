@@ -1,0 +1,598 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>2조 김치 이물검출 공부노트</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column (~760px) with the deck's purple bar as the only accent; numbers in mono so every figure reads like a measurement */
+:root{
+  --bg:#fbfaff; --surface:#ffffff; --fg:#1b1d3a; --muted:#5d6080; --line:#e3e1f0;
+  --accent:#6d3fe0; --accent-soft:#efe9fd; --navy:#1f2a5c;
+  --ok:#17803d; --ok-soft:#e5f5ea; --warn:#a15c00; --warn-soft:#fff3dc; --bad:#c0262d; --bad-soft:#fde9ea;
+  --c-train:#6d3fe0; --c-val:#2b8ac8; --c-test:#d9822b; --c-bridge:#8a8fa8;
+  --f-body:"Noto Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12131f; --surface:#1b1d2e; --fg:#e8e8f4; --muted:#a3a6c4; --line:#2e3150;
+  --accent:#a68bff; --accent-soft:#2a2350; --navy:#c9d1ff;
+  --ok:#5fd18a; --ok-soft:#173326; --warn:#f0b85a; --warn-soft:#3a2c12; --bad:#ff7a80; --bad-soft:#3d1a1d;
+  --c-train:#a68bff; --c-val:#5fb4ea; --c-test:#f0a35a; --c-bridge:#7d82a0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12131f; --surface:#1b1d2e; --fg:#e8e8f4; --muted:#a3a6c4; --line:#2e3150;
+  --accent:#a68bff; --accent-soft:#2a2350; --navy:#c9d1ff;
+  --ok:#5fd18a; --ok-soft:#173326; --warn:#f0b85a; --warn-soft:#3a2c12; --bad:#ff7a80; --bad-soft:#3d1a1d;
+  --c-train:#a68bff; --c-val:#5fb4ea; --c-test:#f0a35a; --c-bridge:#7d82a0; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.7}
+.topbar{height:8px;background:var(--accent)}
+.wrap{max-width:780px;margin:0 auto;padding-block:32px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.25;color:var(--navy);margin:8px 0 8px;font-weight:900;text-wrap:balance}
+h2{font-size:24px;color:var(--navy);margin:0 0 12px;font-weight:900;text-wrap:balance;display:flex;gap:12px;align-items:baseline}
+h2 .no{font-family:var(--f-mono);font-size:15px;color:var(--accent);font-weight:600}
+h3{font-size:17px;margin:24px 0 6px;font-weight:700}
+p{margin:0 0 12px}
+.eyebrow{font-size:13px;letter-spacing:.06em;color:var(--accent);font-weight:700}
+.lede{color:var(--muted);margin-bottom:20px}
+section{padding-top:40px;margin-top:40px;border-top:1px solid var(--line)}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 8px;margin:20px 0 4px}
+nav.toc a{font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none;background:var(--surface)}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;margin:16px 0}
+.flow .st{flex:1 1 120px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.flow .st b{display:block;font-size:13px;color:var(--muted);font-weight:500}
+.flow .st .num{font-size:20px;color:var(--navy)}
+.flow .st.hl{border-color:var(--accent);background:var(--accent-soft)}
+.flow .ar{align-self:center;color:var(--muted)}
+.tbl{overflow-x:auto;margin:12px 0 16px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.03em;background:var(--surface)}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tr.em td{background:var(--accent-soft);font-weight:700}
+.note{border-radius:10px;padding:12px 14px;margin:14px 0;font-size:15px}
+.note.warn{background:var(--warn-soft);border-left:4px solid var(--warn)}
+.note.key{background:var(--accent-soft);border-left:4px solid var(--accent)}
+.note.bad{background:var(--bad-soft);border-left:4px solid var(--bad)}
+.note b.t{display:block;margin-bottom:2px}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;vertical-align:1px}
+.tag.chk{background:var(--warn-soft);color:var(--warn)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.card h4{margin:0 0 4px;font-size:15px}
+.card p{font-size:14px;margin:0;color:var(--muted)}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin:14px 0;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:420px}
+.fig figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+svg text{font-family:var(--f-body);fill:var(--fg)}
+svg .mut{fill:var(--muted)}
+svg .mono{font-family:var(--f-mono)}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--accent-soft);padding:1px 5px;border-radius:4px;word-break:break-all}
+ul{padding-left:20px;margin:6px 0 12px} li{margin:3px 0}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+details[open]{border-color:var(--accent)}
+summary{cursor:pointer;font-weight:700;list-style-position:outside}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details p{margin:8px 0 2px;font-size:15px}
+.who{font-size:12px;color:var(--muted);font-weight:500}
+.split-bar{display:flex;height:34px;border-radius:8px;overflow:hidden;margin:10px 0 6px}
+.split-bar div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;font-family:var(--f-mono);min-width:0;white-space:nowrap;overflow:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:0}
+footer{margin-top:56px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:520px){h2{font-size:21px}.flow .ar{display:none}}
+</style>
+
+<div class="topbar"></div>
+<div class="wrap">
+
+<div class="eyebrow">2조 · 조각김치 이물검출 AI · 교과 7–8</div>
+<h1>발표·코드리뷰 전에 모두가 알아야 할 것</h1>
+<p class="lede">질문이 들어왔을 때 누구든 답할 수 있게, 우리가 한 일과 숫자의 근거를 한 곳에 모았어요. 숫자는 모두 프로젝트 파일에서 가져왔고, 아직 확정되지 않은 것은 <span class="tag chk">확인 필요</span>로 표시했어요.</p>
+
+<nav class="toc" aria-label="목차">
+  <a href="#summary">한눈에</a><a href="#concepts">핵심 개념</a><a href="#data">교과 7 데이터</a><a href="#split">Split</a><a href="#baseline">Baseline</a><a href="#exp">한 변수 실험</a><a href="#test">Frozen Test</a><a href="#limits">한계</a><a href="#autolabel">Auto Label</a><a href="#roles">역할·파일</a><a href="#qa">예상 질문</a><a href="#open">확인 필요</a>
+</nav>
+
+<!-- ───────── 0 ───────── -->
+<section id="summary" style="border-top:0;margin-top:16px;padding-top:16px">
+<h2><span class="no">00</span>한눈에 보는 우리 이야기</h2>
+<p><b>한 문장:</b> 정답 데이터 900쌍을 직접 검수하고, 누수 없이 나눈 뒤, Val로만 Final 모델을 고르고, Test는 딱 한 번 열었다. 그래서 점수는 높지 않아도 <b>믿을 수 있는 점수</b>다.</p>
+<div class="flow">
+  <div class="st"><b>교과 7 정답 데이터</b><span class="num">900쌍</span></div><span class="ar">→</span>
+  <div class="st"><b>Split v4-B (촬영 묶음)</b><span class="num">609/66/75/150</span></div><span class="ar">→</span>
+  <div class="st"><b>Baseline Val mAP50-95</b><span class="num">0.345</span></div><span class="ar">→</span>
+  <div class="st hl"><b>EXP003 Val</b><span class="num">0.446</span></div><span class="ar">→</span>
+  <div class="st hl"><b>Frozen Test (1회)</b><span class="num">0.412</span></div>
+</div>
+<div class="note key"><b class="t">점수를 믿을 수 있는 4가지 조건 (1·2번 슬라이드)</b>
+<ol style="margin:4px 0 0;padding-left:20px">
+<li><b>정답이 맞다</b>: 3단계 전수 검수, 778장 수정, 자동 검사 CRITICAL 0</li>
+<li><b>시험 문제를 미리 보지 않았다</b>: 5분 촬영 묶음 18개, 쪼갠 묶음 0</li>
+<li><b>같은 조건에서 다시 재도 같다</b>: Baseline Val 66 재평가가 팀 값과 일치 (mAP50-95 .3445)</li>
+<li><b>결과를 보고 기준을 바꾸지 않았다</b>: Final은 Val로 먼저 선택, Test는 1회, 이후 튜닝 없음</li>
+</ol></div>
+</section>
+
+<!-- ───────── 1 ───────── -->
+<section id="concepts">
+<h2><span class="no">01</span>핵심 개념</h2>
+
+<h3>Object Detection과 YOLO</h3>
+<p>사진 한 장에서 <b>어디에(BBox)</b>, <b>무엇이(Class)</b>, <b>얼마나 확신하는지(conf)</b>를 한 번에 내놓는 문제예요. 우리는 YOLO11 계열을 썼어요. 크기는 n(가장 가볍고 빠름) &lt; s 순서이고, Baseline은 <code>yolo11n</code>이에요.</p>
+
+<h3>라벨 = 사진 + TXT 한 쌍</h3>
+<p>사진마다 같은 이름의 <code>.txt</code>가 있고, 한 줄이 박스 하나예요. 형식은 <code>class  x_center  y_center  width  height</code>이고, 좌표는 사진 크기로 나눈 0~1 값이에요. 박스가 하나도 없는 빈 TXT는 <b>배경(이물 없음)</b> 사진이에요.</p>
+
+<div class="tbl"><table>
+<thead><tr><th>Class</th><th>이름</th><th>뜻</th><th>메모</th></tr></thead>
+<tbody>
+<tr><td class="n">0</td><td>leaf_paper</td><td>잎·종이</td><td></td></tr>
+<tr><td class="n">1</td><td>plastic_stone_metal</td><td>플라스틱·돌·금속</td><td>Val 정답의 57%로 가장 많음</td></tr>
+<tr><td class="n">2</td><td>branch</td><td>나뭇가지</td><td></td></tr>
+<tr><td class="n">3</td><td>insect</td><td>벌레</td><td></td></tr>
+<tr><td class="n">4</td><td>rubber_glove_unused</td><td>고무장갑 (미사용)</td><td>번호만 남김, 객체 0개 <span class="tag chk">처리 방식 확인 필요</span></td></tr>
+<tr><td class="n">5</td><td>disease_browning</td><td>병해·갈변</td><td>Val·Test 모두 Recall 0</td></tr>
+<tr><td class="n">6</td><td>green_onion_pepper</td><td>파·고추</td><td>99%가 T00 한 묶음 → 평가 불가</td></tr>
+</tbody></table></div>
+
+<h3>IoU: 박스가 얼마나 겹치나</h3>
+<figure class="fig" style="margin:10px 0">
+<svg viewBox="0 0 640 170" role="img" aria-label="IoU 그림: 정답 박스와 예측 박스의 겹친 면적을 합친 면적으로 나눈 값">
+  <rect x="30" y="30" width="150" height="110" fill="none" stroke="var(--ok)" stroke-width="3"/>
+  <rect x="95" y="55" width="150" height="100" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="7 5"/>
+  <rect x="95" y="55" width="85" height="85" fill="var(--accent)" fill-opacity=".25"/>
+  <text x="30" y="22" font-size="13" style="fill:var(--ok)">정답(GT)</text>
+  <text x="180" y="168" font-size="13" style="fill:var(--accent)">예측</text>
+  <text x="300" y="70" font-size="20" font-weight="700">IoU = 겹친 면적 ÷ 합친 면적</text>
+  <text x="300" y="100" font-size="14" class="mut">1이면 완전히 같은 박스, 0이면 안 겹침</text>
+  <text x="300" y="126" font-size="14" class="mut">우리 기준: IoU ≥ 0.5 + 같은 Class → 맞힘(TP)</text>
+</svg>
+</figure>
+
+<h3>conf (확신도)</h3>
+<p>모델이 박스마다 붙이는 0~1 점수예요. 실패 분석은 <b>conf ≥ 0.25</b>인 예측만 봤어요. conf를 낮추면 더 많이 찾지만(R↑) 헛박스도 늘어요(P↓).</p>
+
+<h3>Precision · Recall · mAP</h3>
+<div class="grid2">
+  <div class="card"><h4>Precision (P, 정확도)</h4><p>모델이 "이물이다"라고 한 것 중 진짜 이물인 비율. 헛박스(FP)가 많으면 내려가요.</p></div>
+  <div class="card"><h4>Recall (R, 찾기)</h4><p>진짜 이물 중 모델이 찾은 비율. 놓친 것(FN)이 많으면 내려가요. 이물 검출에선 놓치는 게 더 위험해요.</p></div>
+  <div class="card"><h4>mAP50</h4><p>IoU 0.5 기준으로 Class별 AP(P-R 곡선 아래 면적)를 구해 평균. "찾았나"에 가까움.</p></div>
+  <div class="card"><h4>mAP50-95 (우리 주 지표)</h4><p>IoU 0.50, 0.55 … 0.95 기준 AP의 평균. 박스 위치까지 정확해야 높아요. Final 선택 기준.</p></div>
+</div>
+
+<h3>실패 유형 4가지 (<code>failure_analyzer.match_boxes</code>)</h3>
+<div class="tbl"><table>
+<thead><tr><th>유형</th><th>판정 조건 (conf ≥ 0.25)</th><th>쉬운 말</th></tr></thead>
+<tbody>
+<tr><td><b>TP</b></td><td>IoU ≥ 0.5, Class 같음</td><td>맞힘</td></tr>
+<tr><td><b>CLASS</b></td><td>IoU ≥ 0.5, Class 다름</td><td>위치는 맞는데 이름을 틀림</td></tr>
+<tr><td><b>BBOX</b></td><td>IoU 0.1~0.5, Class 같음</td><td>이름은 맞는데 박스가 비뚤어짐</td></tr>
+<tr><td><b>FP</b></td><td>어떤 정답과도 안 겹침</td><td>헛박스</td></tr>
+<tr><td><b>FN</b></td><td>끝까지 짝이 없는 정답</td><td>놓침 (가장 큰 문제)</td></tr>
+</tbody></table></div>
+<p>크기(small/medium/large) 경계는 <b>Class별로 전체 900장 박스 크기의 1/3·2/3 지점</b>이에요. Val과 Test에 같은 경계를 써서 비교할 수 있어요.</p>
+
+<h3>과적합(Overfitting) 확인법</h3>
+<p>Train은 계속 좋아지는데 Val이 나빠지기 시작하면 외우기만 하는 상태예요. <b>train loss는 계속 내려가는데 val loss가 다시 올라가는 지점</b>이 신호예요. 그래서 best 가중치는 Val 기준으로 고르고, patience(개선이 없으면 멈추는 epoch 수)를 둬요. 우리 Baseline은 70 epochs · patience 30이고, 예비 학습의 best가 70~75 epoch 근처여서 70으로 정했어요.</p>
+<div class="note warn"><b class="t">확인 필요</b>실제 train/val loss 곡선 숫자는 이 자료에 없어요. 과적합 여부를 물으면 Training 담당(이상직)의 <code>results.csv</code>/<code>results.png</code>로 답해야 해요.</div>
+</section>
+
+<!-- ───────── 2 ───────── -->
+<section id="data">
+<h2><span class="no">02</span>교과 7 · 정답 데이터 900쌍</h2>
+<p class="who">Data · 장세훈 (3번 슬라이드)</p>
+<div class="flow">
+  <div class="st"><b>① 1차 라벨링</b>3명 × 300장, 사진마다 박스 그리기</div><span class="ar">→</span>
+  <div class="st"><b>② 교차검수</b>서로 바꿔서 다시 봄</div><span class="ar">→</span>
+  <div class="st"><b>③ 최종검수</b>900장 전부</div><span class="ar">→</span>
+  <div class="st hl"><b>자동 검사</b>심각 등급 0건이어야 FINAL</div>
+</div>
+<ul>
+<li>900장 중 한 번이라도 고친 사진 <span class="num">778장 (86%)</span>, 그대로 <span class="num">122장</span></li>
+<li>빠진 이물에 박스 새로 추가 <span class="num">350개</span>, 느슨한 박스는 딱 맞게 수정</li>
+<li>하나라도 문제가 남으면 FINAL을 만들지 않는 <b>조건부 FINAL</b></li>
+<li>구성: 김치+이물 725 · 이물만 151 · 정상 김치 24 · 배경(빈 라벨) 26장 · Dataset1 500 (55.6%) / Dataset2 400 · 날짜 4일 (04-10 150 · 04-11 250 · 04-24 350 · 05-13 150)</li>
+</ul>
+<div class="note warn"><b class="t">고무장갑 처리: 문서끼리 다름 <span class="tag chk">확인 필요</span></b>2번 슬라이드는 "고무장갑 = 배경 (사진은 유지, 박스만 삭제)"이고, <code>split_rationale.md</code>·<code>label_visualizer.py</code>는 "고무장갑 → Class 1로 합침"이에요. 어느 쪽이 실제 라벨인지 정해서 모두 같은 답을 해야 해요. 두 경우 모두 Class 4는 객체 0개라 "번호만 있는 미사용 Class"예요.</div>
+</section>
+
+<!-- ───────── 3 ───────── -->
+<section id="split">
+<h2><span class="no">03</span>Split · 촬영 묶음 단위로 나누기</h2>
+<p class="who">Data · 장세훈 (4번), 정책·코드 보조 · 박하나</p>
+
+<h3>왜 사진 단위로 나누면 안 되나 (누수)</h3>
+<p>같은 이물 세트를 김치 위에서 옮겨 가며 찍었고, <b>5분 넘게 쉴 때만 이물을 바꿨어요.</b> 그래서 같은 묶음 사진은 사실상 같은 문제예요. 사진 단위로 나누면 같은 이물이 Train과 Val에 함께 들어가서 "이미 본 문제"를 맞히게 돼요.</p>
+<figure class="fig">
+<svg viewBox="0 0 640 210" role="img" aria-label="사진 단위 분할은 같은 묶음이 Train과 Val에 섞이고, 묶음 단위 분할은 묶음이 한 곳에만 들어간다">
+  <text x="10" y="22" font-size="14" font-weight="700">사진 단위 (v4-A) · 누수</text>
+  <rect x="10" y="34" width="290" height="56" rx="8" fill="none" stroke="var(--muted)" stroke-dasharray="5 4"/>
+  <g>
+    <rect x="22" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/><rect x="58" y="46" width="30" height="32" rx="4" fill="var(--c-val)"/><rect x="94" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/><rect x="130" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/><rect x="166" y="46" width="30" height="32" rx="4" fill="var(--c-val)"/><rect x="202" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/><rect x="238" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/>
+  </g>
+  <text x="10" y="112" font-size="13" class="mut">같은 5분 묶음 사진이 Train·Val에 섞임</text>
+  <text x="10" y="134" font-size="13">Baseline Recall</text><text x="110" y="134" font-size="15" font-weight="700" class="mono" style="fill:var(--bad)">0.781 (부풀림)</text>
+
+  <text x="340" y="22" font-size="14" font-weight="700">촬영 묶음 단위 (v4-B)</text>
+  <rect x="340" y="34" width="140" height="56" rx="8" fill="none" stroke="var(--muted)" stroke-dasharray="5 4"/>
+  <rect x="352" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/><rect x="390" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/><rect x="428" y="46" width="30" height="32" rx="4" fill="var(--c-train)"/>
+  <rect x="490" y="34" width="140" height="56" rx="8" fill="none" stroke="var(--muted)" stroke-dasharray="5 4"/>
+  <rect x="502" y="46" width="30" height="32" rx="4" fill="var(--c-val)"/><rect x="540" y="46" width="30" height="32" rx="4" fill="var(--c-val)"/><rect x="578" y="46" width="30" height="32" rx="4" fill="var(--c-val)"/>
+  <text x="340" y="112" font-size="13" class="mut">묶음째 한 곳에만 → Val은 처음 보는 이물</text>
+  <text x="340" y="134" font-size="13">Baseline Recall</text><text x="440" y="134" font-size="15" font-weight="700" class="mono" style="fill:var(--ok)">0.444 (진짜)</text>
+  <rect x="10" y="160" width="12" height="12" fill="var(--c-train)"/><text x="28" y="171" font-size="12" class="mut">Train 사진</text>
+  <rect x="110" y="160" width="12" height="12" fill="var(--c-val)"/><text x="128" y="171" font-size="12" class="mut">Val 사진</text>
+  <text x="220" y="171" font-size="12" class="mut">점선 상자 = 5분 촬영 묶음 (같은 이물 세트)</text>
+  <text x="10" y="200" font-size="13" font-weight="700" style="fill:var(--accent)">0.781 → 0.444 (−0.337): 거품을 걷어내고 다시 출발</text>
+</svg>
+</figure>
+
+<h3>묶음 만드는 법 (<code>split_builder.py</code>)</h3>
+<ol style="padding-left:20px">
+<li>파일명(<code>YYMMDD_HHMMSSffffff</code>) = 촬영 시각 → 시간순 정렬</li>
+<li>앞 사진과 <b>5분(300초) 넘게</b> 떨어지면 새 묶음 → <b>18개 묶음 T00~T17</b></li>
+<li>MD5가 같은 파일, pHash 거리 ≤ 5인 거의 같은 사진이 다른 묶음에 있으면 묶음 병합</li>
+<li>묶음 단위로 배정 후 검증 (같은 묶음이 두 split에 없음, MD5 겹침 없음, 장수 확인)</li>
+</ol>
+
+<h3>최종 배정 v4-B (2026-10-19 확정)</h3>
+<div class="split-bar" role="img" aria-label="Train 609, Val 66, Test 75, Bridge 150">
+  <div style="flex:609;background:var(--c-train)">Train 609</div>
+  <div style="flex:66;background:var(--c-val)">66</div>
+  <div style="flex:75;background:var(--c-test)">75</div>
+  <div style="flex:150;background:var(--c-bridge)">Bridge 150</div>
+</div>
+<div class="legend"><span><i style="background:var(--c-train)"></i>Train</span><span><i style="background:var(--c-val)"></i>Val</span><span><i style="background:var(--c-test)"></i>Test</span><span><i style="background:var(--c-bridge)"></i>Bridge Holdout</span></div>
+<div class="tbl"><table>
+<thead><tr><th>역할</th><th>묶음</th><th class="n">장수</th><th>언제 쓰나</th></tr></thead>
+<tbody>
+<tr><td>Train</td><td>나머지 10묶음 (T00 Class 6 · T02 정상 김치 · T17 이물만 포함)</td><td class="n">609</td><td>학습, 매 epoch</td></tr>
+<tr><td>Val</td><td>T01 + T03 + T07</td><td class="n">66</td><td>모델 비교 · Final 선택 (여러 번)</td></tr>
+<tr><td>Test (Frozen)</td><td>T08 + T14</td><td class="n">75</td><td>Final 확정 후 딱 1회</td></tr>
+<tr><td>Bridge Holdout</td><td>T09 + T11 + T16</td><td class="n">150</td><td>교과 14용, 학습·튜닝에 안 쓴 기준점</td></tr>
+</tbody></table></div>
+
+<div class="note key"><b class="t">왜 600/75/75/150이 아니라 609/66/75/150인가</b>Val 75장을 정확히 맞추려면 묶음을 잘라야 했어요. 장수보다 누수 방지를 택해서 Val이 9장 줄고 Train이 9장 늘었어요. 규칙 0: <b>묶음은 절대 쪼개지 않는다</b> (T17·T00 포함, 시간·개수로 자르는 것도 금지).</div>
+
+<h3>Split이 남긴 한계 (점수 해석할 때 꼭 말하기)</h3>
+<ul>
+<li><b>Class 6 (파·고추)</b>: Train 249 · Val 1 · Test 1 · Bridge 0 → 99%가 T00 한 묶음이라 평가 불가</li>
+<li><b>이물만 장면</b>: T17 한 묶음뿐 → Train에만 있어 평가 불가</li>
+<li><b>정상 김치</b>: Test에 0장 → 깨끗한 김치에서의 오탐은 Val에서만 확인 (Val 정상 김치 15장에선 헛박스 0개)</li>
+<li><b>Class 5 (병해)</b>: 465개 중 Train 163 (35%) · Bridge 236 (51%) · Val+Test 66 (14%) → 학습량 부족</li>
+<li><b>Val Class 쏠림</b>: Class 1이 57% → 평균 mAP 말고 Class별로 봐야 함</li>
+<li>Test 애매한 라벨 1장 <code>250411_140406550160.jpg</code> = <code>eval_exclude</code></li>
+</ul>
+<div class="note warn"><b class="t">헷갈리기 쉬운 옛 숫자</b>P 0.890 · R 0.592 · mAP50 0.658 · mAP50-95 0.505는 <b>이전 Split(v1, Val 75장)</b> 값이에요. 지금 발표 숫자가 아니에요. EXP001 비교 PDF의 Baseline R 0.781도 누수 있던 v4-A 기준이에요.</div>
+</section>
+
+<!-- ───────── 4 ───────── -->
+<section id="baseline">
+<h2><span class="no">04</span>Baseline 조건과 결과</h2>
+<p class="who">Training · 이상직 (5·6번) · 평가 재현 · 박하나 (7번)</p>
+<div class="tbl"><table>
+<thead><tr><th>항목</th><th>값</th><th>이유</th></tr></thead>
+<tbody>
+<tr><td>모델</td><td><code>yolo11n</code></td><td>가장 가벼운 기준 모델</td></tr>
+<tr><td>imgsz · batch</td><td class="num">640 · 8</td><td>batch를 작게 잡아 1280까지 같은 batch로 비교 가능</td></tr>
+<tr><td>epochs · patience</td><td class="num">70 · 30</td><td>예비 학습 best가 70~75 epoch</td></tr>
+<tr><td>seed</td><td class="num">42</td><td>데이터·조건·seed가 같으면 다시 돌려도 같은 결과</td></tr>
+<tr><td>순서</td><td colspan="2">Smoke Test(짧게 돌려 파이프라인 확인) 먼저 → 본 학습</td></tr>
+</tbody></table></div>
+
+<h3>Val 66 결과 (256 obj)</h3>
+<div class="tbl"><table>
+<thead><tr><th>Class</th><th class="n">Inst</th><th class="n">P</th><th class="n">R</th><th class="n">mAP50</th><th class="n">mAP50-95</th></tr></thead>
+<tbody>
+<tr class="em"><td>all</td><td class="n">256</td><td class="n">0.917</td><td class="n">0.444</td><td class="n">0.506</td><td class="n">0.345</td></tr>
+<tr><td>0 leaf_paper</td><td class="n">27</td><td class="n">0.838</td><td class="n">0.556</td><td class="n">0.710</td><td class="n">0.543</td></tr>
+<tr><td>1 plastic_stone_metal</td><td class="n">145</td><td class="n">0.940</td><td class="n">0.586</td><td class="n">0.680</td><td class="n">0.491</td></tr>
+<tr><td>2 branch</td><td class="n">39</td><td class="n">0.786</td><td class="n">0.563</td><td class="n">0.657</td><td class="n">0.473</td></tr>
+<tr><td>3 insect</td><td class="n">23</td><td class="n">0.936</td><td class="n">0.957</td><td class="n">0.986</td><td class="n">0.559</td></tr>
+<tr><td>5 disease_browning</td><td class="n">21</td><td class="n">1.000</td><td class="n">0.000</td><td class="n">0.003</td><td class="n">0.001</td></tr>
+<tr><td>6 green_onion_pepper</td><td class="n">1</td><td class="n">1.000</td><td class="n">0.000</td><td class="n">0.000</td><td class="n">0.000</td></tr>
+</tbody></table></div>
+<p>팀 PDF 값(P .916 · R .444 · mAP50 .506 · mAP50-95 .3445)과 일치 = <b>재현 성공</b>. 병해 P 1.000은 "거의 예측을 안 해서" 생긴 값이라 좋은 뜻이 아니에요.</p>
+
+<h3>실패 분석: 123개, 무엇이 문제였나</h3>
+<div class="grid2">
+  <div class="card"><h4><span class="num">FN 82</span> 놓침</h4><p>가장 큰 문제. 놓친 82개 중 60개(73%)가 small</p></div>
+  <div class="card"><h4><span class="num">FP 24</span> 헛박스</h4><p>김치 조각을 이물로 잡음 (추정)</p></div>
+  <div class="card"><h4><span class="num">CLASS 11</span> 혼동</h4><p>플라스틱 ↔ 나뭇잎·나뭇가지</p></div>
+  <div class="card"><h4><span class="num">BBOX 6</span> 어긋남</h4><p>Class는 맞고 박스가 비뚤어짐</p></div>
+</div>
+<p>크기별 놓친 비율: small <span class="num">60/90 (67%)</span> · medium <span class="num">15/67 (22%)</span> · large <span class="num">7/99 (7%)</span>. 플라스틱 small은 51개 중 38개를 놓쳤어요.</p>
+<div class="note key"><b class="t">다음 실험의 근거</b>고해상도 원본을 640으로 줄이면 30px 이물이 약 4px이 돼서 "점 하나" 수준이에요. 그래서 <b>해상도를 키우면 덜 놓칠 것</b>이라는 가설로 imgsz부터 바꿨어요. (30px→4px은 팀 자료 기준 예시)</div>
+</section>
+
+<!-- ───────── 5 ───────── -->
+<section id="exp">
+<h2><span class="no">05</span>한 변수 실험과 EXP003 선택</h2>
+<p class="who">Experiment · 박하솔 (8·9번)</p>
+<h3>규칙</h3>
+<ul>
+<li><b>한 번에 하나만</b>: 실험마다 Baseline에서 변수 하나만 바꿈. 같은 Split(v4-B, Train 609 · Val 66) · seed 42 · epoch 70 · batch 8</li>
+<li><b>코드로 강제</b>: train/val md5가 다르거나 변수가 2개 이상이면 학습이 시작되지 않음</li>
+<li><b>+0.02 기준을 결과 보기 전에 정함</b> (10/16): Val mAP50-95가 Baseline보다 0.02 이상 올라야 통과. Val 66장은 운으로도 ±0.01 흔들리기 때문</li>
+<li>통과한 후보끼리 비교 → Final 선택 → 선택 끝날 때까지 Test 잠금</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>실험</th><th>바꾼 것</th><th class="n">Val mAP50-95</th><th class="n">vs Baseline</th><th>결과</th></tr></thead>
+<tbody>
+<tr><td>Baseline</td><td>yolo11n · 640</td><td class="n">0.345</td><td class="n">—</td><td>기준</td></tr>
+<tr><td>EXP001</td><td>imgsz 960</td><td class="n">0.423</td><td class="n">+0.078</td><td>통과</td></tr>
+<tr><td>EXP002</td><td>model s (640)</td><td class="n">0.415</td><td class="n">+0.070</td><td>통과 · 3위</td></tr>
+<tr class="em"><td>EXP003</td><td>imgsz 1280</td><td class="n">0.446</td><td class="n">+0.101</td><td>통과 → Final</td></tr>
+<tr><td>EXP004</td><td>1280 + model s</td><td class="n">0.490</td><td class="n">+0.145</td><td>참고로만</td></tr>
+</tbody></table></div>
+<p>EXP003 Val: P <span class="num">.948</span> · R <span class="num">.491</span> · mAP50 <span class="num">.550</span> · mAP50-95 <span class="num">.446</span> (Baseline 대비 +29%). 후보 3개 중 4개 지표 모두 1등이에요.</p>
+<ul>
+<li><b>해석</b>: mAP50 +0.044보다 mAP50-95 +0.101이 훨씬 커요 → 새로 찾은 것보다 <b>박스가 정확해진 효과</b>가 커요.</li>
+<li><b>해상도 +0.101, 모델 +0.070을 합치면?</b> 실제 EXP004는 +0.145로, 단순 합 0.171보다 작아요.</li>
+<li>Val 66 · seed 1회라서 작은 차이(예: mAP50 +0.044)는 불확실하다고 말해요.</li>
+<li>확정 시점: 10/19 Validation으로 확정 → 10/20 Frozen Test 1회</li>
+</ul>
+<div class="note warn"><b class="t">EXP004를 왜 Final로 안 했나 <span class="tag chk">확인 필요</span></b>슬라이드는 "점수는 가장 높지만 참고로"라고만 적혀 있어요. Baseline 대비 두 변수(해상도+모델)가 바뀌어 한 변수 규칙의 후보가 아니고, 계산량도 커요(1280은 Baseline의 약 4배, Jetson 속도 미측정). 정확한 공식 이유는 박하솔에게 확인하고 같은 말로 답하기.</div>
+</section>
+
+<!-- ───────── 6 ───────── -->
+<section id="test">
+<h2><span class="no">06</span>Frozen Test · 딱 한 번만 열었다</h2>
+<p class="who">Evaluation · 박하나 (10번)</p>
+<h3>왜 한 번만?</h3>
+<p>Test를 여러 번 보고 고치면 Test에 맞춘 점수가 돼서 "처음 보는 데이터" 성능이 아니게 돼요. 그래서 코드로 막았어요.</p>
+<ul>
+<li><code>evaluate_detector.check_inputs()</code>: <code>split="test"</code>인데 <code>allow_test=False</code>면 <b>PermissionError</b></li>
+<li><code>13_evaluate_final_test.py</code>: <code>final_metrics.csv</code>가 이미 있으면 멈춤 (<code>--force</code>만 예외, 사유 기록)</li>
+<li><code>13b</code>: 결과 파일 있으면 멈춤, test 사진은 옮기거나 지우지 않음 (목록 txt만 만듦)</li>
+</ul>
+
+<h3>Val vs Test (EXP003)</h3>
+<figure class="fig">
+<svg viewBox="0 0 640 230" role="img" aria-label="EXP003 지표: Val 66, Test 75, Test 74 비교 막대">
+  <!-- scale: 0..1 → 0..300px, x0=150 -->
+  <g font-size="12">
+    <line x1="150" y1="20" x2="150" y2="200" stroke="var(--line)"/>
+    <line x1="300" y1="20" x2="300" y2="200" stroke="var(--line)" stroke-dasharray="3 3"/>
+    <line x1="450" y1="20" x2="450" y2="200" stroke="var(--line)"/>
+    <text x="150" y="218" text-anchor="middle" class="mut mono">0</text>
+    <text x="300" y="218" text-anchor="middle" class="mut mono">0.5</text>
+    <text x="450" y="218" text-anchor="middle" class="mut mono">1.0</text>
+  </g>
+  <g font-size="13">
+    <text x="140" y="44" text-anchor="end" font-weight="700">Precision</text>
+    <rect x="150" y="30" width="284.4" height="9" fill="var(--c-val)"/><text x="440" y="39" font-size="11" class="mono">.948</text>
+    <rect x="150" y="42" width="181.5" height="9" fill="var(--c-test)"/><text x="337" y="51" font-size="11" class="mono">.605</text>
+    <text x="140" y="90" text-anchor="end" font-weight="700">Recall</text>
+    <rect x="150" y="76" width="147.3" height="9" fill="var(--c-val)"/><text x="303" y="85" font-size="11" class="mono">.491</text>
+    <rect x="150" y="88" width="139.8" height="9" fill="var(--c-test)"/><text x="296" y="97" font-size="11" class="mono">.466</text>
+    <text x="140" y="136" text-anchor="end" font-weight="700">mAP50</text>
+    <rect x="150" y="122" width="165" height="9" fill="var(--c-val)"/><text x="321" y="131" font-size="11" class="mono">.550</text>
+    <rect x="150" y="134" width="147.9" height="9" fill="var(--c-test)"/><text x="304" y="143" font-size="11" class="mono">.493</text>
+    <text x="140" y="182" text-anchor="end" font-weight="700">mAP50-95</text>
+    <rect x="150" y="168" width="133.8" height="9" fill="var(--c-val)"/><text x="290" y="177" font-size="11" class="mono">.446</text>
+    <rect x="150" y="180" width="123.6" height="9" fill="var(--c-test)"/><text x="280" y="189" font-size="11" class="mono">.412</text>
+  </g>
+  <rect x="490" y="30" width="12" height="12" fill="var(--c-val)"/><text x="508" y="41" font-size="12">Val 66</text>
+  <rect x="490" y="50" width="12" height="12" fill="var(--c-test)"/><text x="508" y="61" font-size="12">Test 75 (1회)</text>
+  <text x="490" y="100" font-size="12" class="mut">주 지표 mAP50-95</text>
+  <text x="490" y="118" font-size="12" class="mut">.446 → .412 (−0.034)</text>
+  <text x="490" y="136" font-size="12" class="mut">거의 유지</text>
+  <text x="490" y="166" font-size="12" style="fill:var(--bad)">P만 크게 하락</text>
+  <text x="490" y="184" font-size="12" style="fill:var(--bad)">.948 → .605</text>
+</svg>
+<figcaption>EXP003 · Test 75장 / 정답 428개 · <code>13_evaluate_final_test.py</code> 1회</figcaption>
+</figure>
+
+<h3>Test Class별 (75장)</h3>
+<div class="tbl"><table>
+<thead><tr><th>Class</th><th class="n">P</th><th class="n">R</th><th class="n">mAP50</th><th class="n">mAP50-95</th></tr></thead>
+<tbody>
+<tr class="em"><td>all</td><td class="n">0.605</td><td class="n">0.466</td><td class="n">0.493</td><td class="n">0.412</td></tr>
+<tr><td>0 leaf_paper</td><td class="n">0.319</td><td class="n">0.857</td><td class="n">0.667</td><td class="n">0.581</td></tr>
+<tr><td>1 plastic_stone_metal</td><td class="n">0.977</td><td class="n">0.480</td><td class="n">0.783</td><td class="n">0.633</td></tr>
+<tr><td>2 branch</td><td class="n">0.990</td><td class="n">0.559</td><td class="n">0.953</td><td class="n">0.808</td></tr>
+<tr><td>3 insect</td><td class="n">0.341</td><td class="n">0.900</td><td class="n">0.495</td><td class="n">0.419</td></tr>
+<tr><td>5 disease_browning</td><td class="n">1.000</td><td class="n">0.000</td><td class="n">0.063</td><td class="n">0.029</td></tr>
+<tr><td>6 green_onion_pepper</td><td class="n">0.000</td><td class="n">0.000</td><td class="n">0.000</td><td class="n">0.000</td></tr>
+</tbody></table></div>
+
+<h3>P가 왜 떨어졌나</h3>
+<ul>
+<li>실패: FN <span class="num">93</span> · FP <span class="num">87</span> · CLASS <span class="num">72</span> · BBOX <span class="num">4</span> (Baseline Val보다 CLASS 11→72, FP 24→87)</li>
+<li>CLASS 72개 중 <b>56개(78%)가 나뭇가지(branch)를 벌레 31개 · 나뭇잎 25개로 잘못 부른 것</b> → insect P .34, leaf P .32. 가는 갈색 막대 모양이 비슷해 보임 (추정)</li>
+<li>파·고추가 Test에 1개뿐인데 0점이라 평균을 깎음 (약 −0.17)</li>
+<li>FN 93개 중 57개(61%) small, 42개(45%)가 병해</li>
+</ul>
+
+<h3>75장과 74장, 결과가 왜 두 개인가</h3>
+<div class="note key">정책상 애매한 라벨 1장(<code>250411_140406550160.jpg</code>)은 평가에서 빼야 하는데, 13번 스크립트가 <code>eval_exclude</code>를 안 읽었어요. 이미 돈 75장 결과를 고치면 "다시 돌린 것"이 되니 <b>그대로 두고</b>, 같은 모델·imgsz·conf로 74장만 <code>13b</code>로 따로 기록했어요. 바뀐 건 평가 사진 목록뿐이라 튜닝이 아니에요. mAP50-95 <span class="num">.412 → .417</span>, 차이 작음.</div>
+<div class="tbl"><table>
+<thead><tr><th>데이터</th><th class="n">P</th><th class="n">R</th><th class="n">mAP50</th><th class="n">mAP50-95</th></tr></thead>
+<tbody>
+<tr><td>Test 75 (1회, 공식)</td><td class="n">0.605</td><td class="n">0.466</td><td class="n">0.493</td><td class="n">0.412</td></tr>
+<tr><td>Test 74 (eval_exclude 반영)</td><td class="n">0.605</td><td class="n">0.466</td><td class="n">0.499</td><td class="n">0.417</td></tr>
+</tbody></table></div>
+<p style="font-size:14px;color:var(--muted)">74장 전체 값은 Class별 값을 평균해 직접 계산한 값이에요. <span class="tag chk">공식 all 줄 확인 필요</span> Class 6 제외 시 P .726 · R .559 · mAP50 .599 · mAP50-95 .500.</p>
+</section>
+
+<!-- ───────── 7 ───────── -->
+<section id="limits">
+<h2><span class="no">07</span>한계와 다음 할 일</h2>
+<p class="who">Inference · 김준형 (13번) · 한계는 숨기지 않고 원인 · 숫자 · 다음 할 일로 넘긴다</p>
+<div class="tbl"><table>
+<thead><tr><th>한계</th><th>원인</th><th>다음</th></tr></thead>
+<tbody>
+<tr><td><b>병해·갈변 Recall 0</b> (Test 45개 중 0개)</td><td><b>데이터 양</b>: Train에 35%뿐, 51%가 Bridge 묶음</td><td>병해 사진을 Train에 더 (교과 11 재촬영)</td></tr>
+<tr><td><b>파·고추 평가 불가</b></td><td><b>데이터 분포</b>: 251개 중 99%가 T00 한 묶음, Val 1 · Test 1</td><td>다른 장면에서 더 촬영. 모델 성능이 아니라 Split 한계로 기록</td></tr>
+<tr><td><b>소수 Class 헛박스</b> (leaf P .32 · insect P .34)</td><td>branch를 insect·leaf로 혼동</td><td>교과 11 새 촬영</td></tr>
+<tr><td><b>1280 계산량</b></td><td>Baseline의 약 4배</td><td>교과 14 현장 확인 · Jetson 속도 · EXP001(960) 대안</td></tr>
+<tr><td>작은 이물 FN</td><td>Val 67%, Test 39%가 small</td><td>해상도 효과 계속 확인</td></tr>
+<tr><td>Test에 정상 김치 0장</td><td>정상 김치 묶음이 T01·T02·T03뿐</td><td>정상 김치 묶음 1개 추가 촬영</td></tr>
+</tbody></table></div>
+<div class="note warn"><b class="t">숫자 하나 통일 필요 <span class="tag chk">확인 필요</span></b>13번 슬라이드는 병해 "46%가 Bridge 묶음"인데, Split 자료는 Bridge 236 (51%)이고 46%는 T09 한 묶음 몫이에요. 발표에서는 하나로 맞추기.</div>
+</section>
+
+<!-- ───────── 8 ───────── -->
+<section id="autolabel">
+<h2><span class="no">08</span>Detection · Auto Label · Human Review</h2>
+<p class="who">Inference · 김준형 (11·12번)</p>
+<div class="flow">
+  <div class="st"><b>① 새 사진 입력</b></div><span class="ar">→</span>
+  <div class="st"><b>② Detection</b>BBox · Class · 확신도</div><span class="ar">→</span>
+  <div class="st"><b>③ Auto Label</b>YOLO TXT 후보 저장</div><span class="ar">→</span>
+  <div class="st hl"><b>④ Human Review</b>교과 7 프로그램에서 Load · 수정 · 승인</div>
+</div>
+<ul>
+<li>모델이 만든 라벨은 <b>후보</b>일 뿐이고, 사람이 교과 7 도구에서 확정해요. 검수 통계도 기록해요.</li>
+<li>시연 영상(1분): 새 사진 Detection → Auto Label TXT → 교과 7 프로그램에서 검수·승인. 고무장갑은 검출 안 함.</li>
+<li>왜 사람이 보나: Test R .466이라 절반 가까이 놓치고, 병해는 거의 못 찾기 때문이에요.</li>
+</ul>
+</section>
+
+<!-- ───────── 9 ───────── -->
+<section id="roles">
+<h2><span class="no">09</span>역할과 핵심 파일</h2>
+<div class="tbl"><table>
+<thead><tr><th>역할</th><th>이름</th><th>발표</th><th>핵심 내용·파일</th></tr></thead>
+<tbody>
+<tr><td>PM</td><td>이성형</td><td>1–2</td><td>전체 흐름, 신뢰 4조건, 결과를 만든 결정 2가지 (고무장갑, 촬영 묶음 Split)</td></tr>
+<tr><td>Data</td><td>장세훈</td><td>3–4</td><td>교과 7 900쌍 검수, Split 정책 · <code>src/split_builder.py</code>, <code>scripts/03_build_split_v4.py</code>, <code>06_check_phash_v4.py</code>, <code>manifests/*.csv</code>, <code>configs/dataset.yaml</code></td></tr>
+<tr><td>Training</td><td>이상직</td><td>5–6</td><td>Baseline 조건·학습 · <code>models/baseline/baseline_best.pt</code></td></tr>
+<tr><td>Evaluation</td><td>박하나</td><td>7, 10</td><td><code>07_evaluate_baseline.py</code> → <code>src/evaluate_detector.py</code>, <code>compare_gt_pred.py</code>, <code>09_collect_failures.py</code> → <code>src/failure_analyzer.py</code>, <code>10_fn_by_size.py</code>, <code>12_failure_deliverables.py</code>, <code>13</code>/<code>13b</code> Test, <code>16_frozen_test_analysis.py</code>, acceptance test E-1~E-9</td></tr>
+<tr><td>Experiment</td><td>박하솔</td><td>8–9</td><td>한 변수 실험 EXP001~004, +0.02 기준, <code>reports/final_model_selection.md</code>, <code>models/improved/exp003_best.pt</code></td></tr>
+<tr><td>Inference</td><td>김준형</td><td>11–13</td><td>Detection · Auto Label · Human Review, 시연 영상, 한계와 교과 11·14</td></tr>
+</tbody></table></div>
+
+<h3>Evaluation 흐름 한 장</h3>
+<div class="fig"><pre style="margin:0;font-family:var(--f-mono);font-size:12.5px;line-height:1.6;white-space:pre">baseline_best.pt ─▶ 07 ─▶ baseline_metrics.csv          (점수)
+                 └▶ compare_gt_pred ─▶ runs/pred_val/   (예측 TXT)
+                        ├▶ 09 ─▶ failure_summary.csv    (왜 틀림)
+                        └▶ 10 ─▶ fn_by_size.csv         (작은 것 놓침)
+                                   └▶ 12 ─▶ failure_analysis.csv
+Val 비교 ─▶ final_model_selection.md (EXP003)
+final_best.pt ─▶ 13  ─▶ final_metrics.csv         (Test 75, 1회)
+              └▶ 13b ─▶ final_metrics_eval74.csv  (Test 74)</pre></div>
+
+<div class="note warn"><b class="t">코드리뷰에서 지적받을 수 있는 점</b>
+<ul style="margin:4px 0 0">
+<li>레포 파일명은 <code>compare_gt_pred.py</code>인데 docstring은 <code>08_compare_gt_pred.py</code></li>
+<li><code>16_frozen_test_analysis.py</code>는 아직 레포에 없음 (하나 PC에만)</li>
+<li>07의 <code>CONFIG</code>에 <code>dataset_version: kimchi_v1</code>이 남아 있음 (실제 v4)</li>
+<li>12의 설명에 "Validation 75장"이 남아 있음 (실제 66장)</li>
+</ul></div>
+</section>
+
+<!-- ───────── 10 ───────── -->
+<section id="qa">
+<h2><span class="no">10</span>예상 질문과 답</h2>
+<p class="lede" style="margin-bottom:8px">처음 16개는 가장 자주 나올 질문이고, 아래에 주제별 질문을 더 모았어요. 눌러서 답을 확인하세요.</p>
+<h3>자주 나올 질문</h3>
+
+<details><summary>Q. 점수가 낮은데 왜 믿을 수 있다고 하나요?</summary><p>4가지 조건을 지켰기 때문이에요. 정답을 3단계로 검수했고, 같은 촬영 묶음이 Train과 평가에 섞이지 않게 나눴고, Baseline을 다시 재도 같은 값이 나왔고, Final은 Val로 먼저 고른 뒤 Test는 한 번만 열었어요. 그래서 Val .446과 Test .412가 비슷하게 나왔어요.</p></details>
+
+<details><summary>Q. Recall이 0.781에서 0.444로 떨어졌는데 모델이 나빠진 건가요?</summary><p>아니에요. 0.781은 사진 단위로 나눠서 같은 이물 세트가 Train과 Val에 함께 있던(누수) 값이에요. 묶음 단위로 다시 나누니 처음 보는 이물에서의 진짜 값 0.444가 나왔어요. 부풀린 점수를 걷어낸 거예요.</p></details>
+
+<details><summary>Q. 왜 묶음을 조금만 잘라서 75장을 맞추지 않았나요?</summary><p>자르면 같은 이물 세트가 양쪽에 들어가 다시 누수가 생겨요. 장수보다 누수 방지를 우선해서 Val 66장으로 갔어요. T17·T00도 같은 이유로 안 잘랐어요.</p></details>
+
+<details><summary>Q. Bridge Holdout은 뭐예요?</summary><p>T09·T11·T16 150장으로, 학습과 튜닝 어디에도 안 쓴 깨끗한 기준점이에요. 교과 14에서 비교용으로 써요.</p></details>
+
+<details><summary>Q. 왜 해상도(imgsz)부터 바꿨어요?</summary><p>Baseline이 놓친 82개 중 73%가 작은 이물이었어요. 640으로 줄이면 30px 이물이 약 4px이 돼서 안 보이니, 해상도를 키우면 덜 놓칠 거라는 가설을 세웠어요.</p></details>
+
+<details><summary>Q. +0.02 기준은 어떻게 정했어요?</summary><p>Val 66장은 운으로도 ±0.01 정도 흔들려서, 그보다 확실히 큰 차이만 개선으로 인정하려고 정했어요. 결과를 보기 전(10/16)에 정했어요.</p></details>
+
+<details><summary>Q. EXP004가 더 높은데 왜 EXP003이에요?</summary><p>EXP004는 해상도와 모델을 둘 다 바꿔서 한 변수 비교 후보가 아니라 참고로 뒀어요. 계산량도 커요. <span class="tag chk">공식 이유는 박하솔 확인</span></p></details>
+
+<details><summary>Q. Test를 왜 한 번만 돌려요?</summary><p>여러 번 보고 고치면 Test에 맞춘 점수가 돼요. 그래서 <code>allow_test</code>와 덮어쓰기 금지로 코드에서 막았어요.</p></details>
+
+<details><summary>Q. 75장이랑 74장 결과가 왜 두 개예요? 13b는 튜닝 아니에요?</summary><p>애매한 라벨 1장을 빼는 정책을 13번이 안 지켜서, 75장 결과는 그대로 두고 74장을 따로 남겼어요. 모델·imgsz·conf는 같고 사진 목록만 달라서 튜닝이 아니에요. 차이는 .412 → .417로 작아요.</p></details>
+
+<details><summary>Q. Val P는 .948인데 Test P는 왜 .605예요?</summary><p>Test에서 나뭇가지를 벌레·나뭇잎으로 헷갈린 게 많아서(CLASS 72개 중 56개) 벌레·나뭇잎 Precision이 떨어졌어요. 파·고추가 1개뿐인데 0점이라 평균을 깎은 것도 있어요. 주 지표 mAP50-95는 .446 → .412로 거의 유지됐어요.</p></details>
+
+<details><summary>Q. 병해는 왜 하나도 못 찾아요?</summary><p>병해 465개 중 Train에는 163개(35%)뿐이고 236개(51%)가 Bridge 묶음에 있어요. 크기와 상관없이 거의 다 놓쳐요. 모델보다 학습 데이터 부족 문제라 Train에 병해 사진을 더 넣는 게 다음 할 일이에요.</p></details>
+
+<details><summary>Q. Class 6는 왜 "평가 불가"예요?</summary><p>파·고추의 99%가 T00 한 묶음에 있어서 Val·Test에 각 1개뿐이에요. 맞으면 1, 틀리면 0이라 숫자로 결론을 내면 안 돼요. 묶음을 쪼개면 누수가 생겨서 못 나눴어요.</p></details>
+
+<details><summary>Q. FN·FP·CLASS·BBOX 기준이 뭐예요?</summary><p>conf ≥ 0.25 예측만 봐요. IoU ≥ 0.5 + 같은 Class = TP, IoU ≥ 0.5 + 다른 Class = CLASS, IoU 0.1~0.5 + 같은 Class = BBOX, 아무 정답과 안 겹침 = FP, 짝 없는 정답 = FN.</p></details>
+
+<details><summary>Q. 과적합은 어떻게 확인했어요?</summary><p>train loss는 내려가는데 val loss가 올라가는지 봐요. best 가중치는 Val 기준으로 저장하고 patience 30을 뒀어요. 그리고 Val과 처음 보는 Test의 차이가 −0.034로 작아서 Val에 과하게 맞춘 건 아니라고 말할 수 있어요. <span class="tag chk">loss 곡선은 Training 확인</span></p></details>
+
+<details><summary>Q. 고무장갑은 어떻게 처리했어요?</summary><p>Class 4는 번호만 남은 미사용 Class예요. 장갑을 이물로 잡는 오검출을 막으려고 처리했어요. <span class="tag chk">배경으로 박스 삭제인지, Class 1로 합쳤는지 팀 답 통일 필요</span></p></details>
+
+<details><summary>Q. Auto Label을 그대로 쓰면 안 되나요?</summary><p>Test Recall이 .466이라 절반 가까이 놓치고 병해는 못 찾아요. 그래서 모델 결과는 후보로만 쓰고, 교과 7 프로그램에서 사람이 수정·승인해요.</p></details>
+
+<h3>개념·지표</h3>
+<details><summary>Q. Precision과 Recall 중 뭐가 더 중요해요?</summary><p>이물 검출에서는 Recall이에요. 헛박스(FP)는 사람이 한 번 더 보면 되지만, 놓친 이물(FN)은 그대로 제품에 들어가요. 우리 Test Recall이 .466이라 모델만으로는 부족하고 Human Review를 붙인 이유도 이거예요.</p></details>
+<details><summary>Q. mAP50 말고 mAP50-95를 주 지표로 쓴 이유는?</summary><p>mAP50은 박스가 절반만 겹쳐도 맞힌 걸로 쳐서 "찾았나"만 봐요. mAP50-95는 IoU 0.50~0.95를 모두 평균해서 박스 위치까지 정확해야 높아요. 더 엄격한 기준으로 고르려고 썼어요.</p></details>
+<details><summary>Q. 병해 Precision이 1.000인데 좋은 거 아니에요?</summary><p>아니에요. 모델이 병해라고 예측한 게 거의 없어서, 몇 안 되는 예측이 맞았을 뿐이에요. Recall이 0이라 실제로는 거의 다 놓친 상태예요. P와 R을 항상 같이 봐야 해요.</p></details>
+<details><summary>Q. 실패 분석에서 conf 0.25를 쓴 이유는?</summary><p>예측 기본값을 그대로 써서 Baseline Val 분석과 Test 분석을 같은 기준으로 비교하려고요. 결과를 보고 conf를 바꾸지 않았어요.</p></details>
+<details><summary>Q. Ultralytics가 그려주는 Confusion Matrix는 왜 안 썼어요?</summary><p>낮은 conf 기준으로 그려져서 배경 쪽 헛박스가 실제보다 크게 보였어요. 그래서 conf 0.25 기준으로 직접 짝지은 실패 분석(09번)을 썼어요.</p></details>
+<details><summary>Q. YOLO 라벨 좌표는 픽셀이에요?</summary><p>아니에요. <code>class x_center y_center width height</code>를 사진 너비·높이로 나눈 0~1 값이에요. 그래서 imgsz를 640에서 1280으로 바꿔도 라벨은 그대로 써요.</p></details>
+<details><summary>Q. Leaf는 Recall .857인데 Precision .319예요. 무슨 뜻이에요?</summary><p>진짜 나뭇잎은 잘 찾지만, 나뭇잎이 아닌 것(주로 나뭇가지)도 나뭇잎이라고 많이 불렀다는 뜻이에요. Test CLASS 혼동 중 25개가 branch → leaf였어요.</p></details>
+
+<h3>교과 7 데이터</h3>
+<details><summary>Q. 778장이나 고쳤으면 처음 라벨이 엉망이었던 거예요?</summary><p>"한 번이라도 손댄 사진"을 센 숫자라서 느슨한 박스를 딱 맞게 고친 것도 포함돼요. 그중 큰 건 빠진 이물 350개를 새로 추가한 거예요. 그만큼 3단계 검수가 실제로 효과가 있었다는 근거로 말하면 돼요.</p></details>
+<details><summary>Q. 자동 검사는 무엇을 검사했어요?</summary><p>심각 등급과 확인 필요 등급으로 나눠 라벨 문제를 찾고, 심각 등급이 0건이어야 FINAL을 만들었어요. <span class="tag chk">세부 검사 항목은 장세훈 확인</span></p></details>
+<details><summary>Q. 배경(빈 라벨) 사진은 왜 넣었어요?</summary><p>이물이 없는 사진에서는 아무것도 잡지 않도록 배우게 하려고요. 26장이 있고, 오탐을 줄이는 데 써요.</p></details>
+<details><summary>Q. 데이터는 왜 레포에 없어요?</summary><p>NDA 때문이에요. 라벨을 커밋했다가 되돌린 적이 있어서, 레포에는 코드와 목록(manifest)·리포트만 올려요.</p></details>
+
+<h3>Split</h3>
+<details><summary>Q. 묶음 기준을 왜 5분으로 했어요?</summary><p>촬영한 사람에게 확인해 보니 5분 넘게 쉴 때 이물 세트를 바꿨어요. 25장마다 김치 종류는 바뀌지만 이물은 그대로라 25장 단위는 경계로 쓰지 않았어요.</p></details>
+<details><summary>Q. pHash는 뭐예요?</summary><p>사진의 "지문" 같은 값이에요. 파일이 달라도 거의 같은 장면이면 거리가 작아요. 거리 5 이하이면 같은 묶음으로 합쳤고, 최종 묶음 경계끼리는 거리가 14~24라서 경계를 넘는 누수가 없다고 확인했어요.</p></details>
+<details><summary>Q. Split 버전이 왜 이렇게 많아요 (v1, v4-A, v4-B)?</summary><p>v1은 원래 validation 사진을 Val로 살리려고 묶음을 쪼갰고, v4-A는 사진 단위라 누수가 있었어요. 둘 다 같은 이물이 Train과 평가에 함께 들어가는 문제가 있어서, 묶음을 절대 안 쪼개는 v4-B로 확정했어요 (2026-10-19).</p></details>
+<details><summary>Q. 원본 데이터셋의 validation을 그대로 쓰면 되지 않아요?</summary><p>원본 validation 180장이 묶음마다 14~30%씩 흩어져 있어서, 그대로 쓰면 같은 묶음이 Train과 Val으로 갈라져요. 실제로 180장 중 135장이 Train 사진과 60초 이내에 찍힌 사진이었어요.</p></details>
+<details><summary>Q. Val과 Test는 뭐가 달라요?</summary><p>Val은 모델 비교·Final 선택에 여러 번 써요. Test는 Final을 정한 뒤 딱 한 번만 열어요. 그래서 Val 점수는 "고르는 데 쓴 점수", Test 점수가 "처음 보는 데이터에서의 성능"이에요.</p></details>
+<details><summary>Q. Test에 정상 김치가 없으면 오탐은 어떻게 확인해요?</summary><p>Test에서는 못 봐요. 정상 김치 묶음이 T01·T02·T03 셋뿐이라서요. 대신 Val의 정상 김치 15장에서 헛박스가 0개였다는 것으로 확인했고, Test 쪽은 한계로 적었어요.</p></details>
+<details><summary>Q. 병해를 살리려고 Bridge 묶음을 바꾸는 방법은 없었어요?</summary><p>있어요. Bridge의 T09를 T06과 맞바꾸는 v5 후보를 만들었지만 실제 데이터로 돌리기 전이고, 최종은 v4-B로 확정했어요. 교과 11·14에서 다시 볼 수 있는 선택지예요.</p></details>
+<details><summary>Q. K-Fold 교차검증은 안 했어요?</summary><p>이번엔 고정 Split 하나로 진행했어요. 묶음이 18개뿐이라 Fold마다 Class 구성이 크게 흔들리고, Test·Bridge를 고정해 두는 원칙과도 맞지 않아서예요. 대신 결과의 불확실성(Val 66 · seed 1회)을 함께 말해요.</p></details>
+
+<h3>Baseline·학습</h3>
+<details><summary>Q. 왜 yolo11n으로 시작했어요?</summary><p>가장 가볍고 빨라서 기준점으로 좋아요. 그다음 실험에서 크기(s)나 해상도를 하나씩 바꿔서 얼마나 좋아지는지 봤어요.</p></details>
+<details><summary>Q. batch를 8로 작게 잡은 이유는?</summary><p>imgsz를 1280까지 올려도 GPU 메모리에 들어가야 같은 batch로 공정하게 비교할 수 있어서예요. 실험마다 batch가 다르면 변수가 2개가 돼요.</p></details>
+<details><summary>Q. Smoke Test는 뭐예요?</summary><p>본 학습 전에 아주 짧게 돌려서 데이터 경로, 라벨, 설정이 제대로 연결되는지만 보는 시험 운전이에요.</p></details>
+<details><summary>Q. "재현 성공"이 왜 중요해요?</summary><p>같은 가중치·데이터로 다시 재도 같은 숫자가 나와야 이후 실험 비교를 믿을 수 있어요. 한때 옛 평가 코드 때문에 값이 달랐는데, main 버전으로 되돌린 뒤 팀 값(mAP50-95 .3445)과 일치했어요.</p></details>
+
+<h3>실험·Final 선택</h3>
+<details><summary>Q. 960과 1280 중 왜 1280이에요?</summary><p>Val mAP50-95가 960은 .423, 1280은 .446으로 1280이 더 높았고 후보 중 4개 지표 모두 1등이었어요. 다만 1280은 계산량이 Baseline의 약 4배라서, 현장 속도가 문제면 960(EXP001)이 대안이에요.</p></details>
+<details><summary>Q. md5 잠금은 뭐예요?</summary><p>학습에 쓰는 train/val 목록 파일의 해시값이에요. 실험마다 이 값이 같아야 학습이 시작되게 해서, 데이터가 몰래 바뀐 채로 비교되는 걸 막았어요.</p></details>
+<details><summary>Q. 증강이나 다른 하이퍼파라미터는 왜 안 바꿨어요?</summary><p>한 번에 하나만 바꾸는 규칙이라, Baseline 실패 분석에서 가장 큰 원인(작은 이물)과 연결되는 해상도와 모델 크기부터 봤어요. 나머지는 다음 단계 후보예요.</p></details>
+<details><summary>Q. seed 한 번만 돌렸는데 결과를 믿어도 돼요?</summary><p>큰 차이(mAP50-95 +0.101)는 믿을 만하지만, 작은 차이는 불확실하다고 스스로 적었어요. 그래서 +0.02 기준을 미리 정해서 운으로 생기는 흔들림(±0.01)보다 큰 것만 인정했어요.</p></details>
+
+<h3>Frozen Test</h3>
+<details><summary>Q. Test 결과를 보고 바꾼 게 하나도 없어요?</summary><p>없어요. 16번 분석은 "왜 틀렸나"를 보는 분석만 했고, 모델·설정·conf는 그대로예요. 74장 재평가도 평가 사진 목록만 정책대로 맞춘 거예요.</p></details>
+<details><summary>Q. Val .446 → Test .412, 이 차이는 괜찮은 거예요?</summary><p>−0.034로 작아요. Val로 모델을 골랐는데도 처음 보는 묶음에서 비슷하게 나왔으니, Val에 과하게 맞춰지지 않았다는 근거예요.</p></details>
+<details><summary>Q. Test에서 branch는 Val보다 오히려 좋아요 (.808). 왜요?</summary><p>Test의 branch는 medium 크기가 64%로 쏠려 있어서 찾기 쉬운 편이었어요. Split마다 크기 구성이 다르니 Class별 숫자는 구성과 같이 봐야 해요.</p></details>
+<details><summary>Q. Test 75장 중 몇 장에서 실패가 있었어요?</summary><p>71장이에요. 실패는 FN 93 · FP 87 · CLASS 72 · BBOX 4로, 모두 김치+이물 장면이었어요.</p></details>
+
+<h3>현장 적용·다음 단계</h3>
+<details><summary>Q. 이 모델을 실제 공장에 바로 쓸 수 있어요?</summary><p>단독으로는 어려워요. Recall .466이라 절반 가까이 놓치고 병해는 못 찾아요. 지금은 사람 검수를 돕는 후보 생성(Auto Label) 용도이고, 교과 11·14에서 데이터 보강과 현장 확인이 필요해요.</p></details>
+<details><summary>Q. 교과 11·14에서는 뭘 해요?</summary><p>교과 11에서는 병해·파·고추·정상 김치를 다른 장면으로 더 촬영해 데이터 한계를 풀고, 교과 14에서는 Bridge 150장과 현장(Jetson 속도 포함)으로 다시 확인해요.</p></details>
+<details><summary>Q. Auto Label 결과를 교과 7 도구에서 바로 열 수 있어요?</summary><p>네. 모델이 YOLO TXT 형식으로 저장해서 교과 7 프로그램이 그대로 불러와요. 사람이 수정·승인하고 검수 통계를 기록해요. <span class="tag chk">통계 항목은 김준형 확인</span></p></details>
+
+<h3>코드리뷰</h3>
+<details><summary>Q. Test를 실수로 여는 걸 코드에서 어떻게 막았어요?</summary><p><code>evaluate_detector.check_inputs()</code>가 <code>split="test"</code>인데 <code>allow_test=False</code>면 PermissionError를 내요. 13번은 결과 파일이 이미 있으면 멈추고, <code>--force</code>는 사유를 남겨야 해요.</p></details>
+<details><summary>Q. 13번을 고치지 않고 13b를 따로 만든 이유는?</summary><p>13번을 고쳐서 다시 돌리면 공식 1회 결과가 덮어써져요. 그래서 75장 결과는 그대로 두고, 74장은 별도 스크립트와 별도 결과 파일로 남겼어요.</p></details>
+<details><summary>Q. 크기 경계(small/medium/large)는 어디서 가져와요?</summary><p>원래 split_report.md에서 읽는데 v4 리포트에 경계 줄이 없었어요. 그래서 같은 규칙(Class별 900장 박스 크기의 1/3·2/3 지점)으로 다시 계산해 Val과 Test에 똑같이 썼어요.</p></details>
+<details><summary>Q. 테스트 코드는 있어요?</summary><p>네. <code>tests/test_split_builder.py</code>(Split 검증)와 <code>tests/test_failure_analyzer.py</code>(실패 판정, 16개 통과)가 있어요.</p></details>
+<details><summary>Q. 실패 사례 이미지는 왜 커밋에 없어요?</summary><p><code>.gitignore</code>가 <code>*.jpg</code>를 막고 있어서요. 데모 이미지는 팀 허락을 받고 <code>git add -f</code>로 올리기로 했어요.</p></details>
+</section>
+
+<!-- ───────── 11 ───────── -->
+<section id="open">
+<h2><span class="no">11</span>발표 전에 팀이 맞춰야 할 것</h2>
+<ul>
+<li><span class="tag chk">확인 필요</span> 고무장갑: 배경(박스 삭제) vs Class 1로 합침. 2번 슬라이드와 <code>split_rationale.md</code>가 다름</li>
+<li><span class="tag chk">확인 필요</span> Test 74장 공식 all 줄 (지금은 Class별 평균 계산값)</li>
+<li><span class="tag chk">확인 필요</span> 병해 Bridge 비율: 13번 슬라이드 46% vs Split 자료 51%</li>
+<li><span class="tag chk">확인 필요</span> EXP004를 참고로 둔 공식 이유</li>
+<li><span class="tag chk">확인 필요</span> Baseline·EXP003 train/val loss 곡선 (과적합 질문 대비)</li>
+<li><span class="tag chk">확인 필요</span> T08의 애매한 라벨 1장(▲1)은 eval_exclude 파일 날짜로 추정한 위치</li>
+<li><span class="tag ok">정리됨</span> 옛 숫자(v1: P .890 · R .592 · mAP50-95 .505)는 발표에서 쓰지 않기</li>
+</ul>
+</section>
+
+<footer>출처: 프로젝트 메모, <code>knowledge/교과8/split_rationale.md</code>, <code>split_v4/limitations.md</code>, <code>reports/baseline_v4b_val66_metrics.md</code>, <code>reports/frozen_test_exp003_metrics.md</code>, <code>acceptance_test/acceptance_test_evaluation.md</code>, <code>code_review_flow/evaluation_flow_hana.md</code>, 발표 슬라이드 01–13 생성 스크립트 · 2026-10-21 기준</footer>
+</div>
+
+</body></html>

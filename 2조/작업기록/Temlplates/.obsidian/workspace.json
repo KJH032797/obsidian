@@ -1,0 +1,202 @@
+{
+  "main": {
+    "id": "1e838774711ab602",
+    "type": "split",
+    "children": [
+      {
+        "id": "ba74d430646acc9e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c1e66fcc95bcf14f",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "새 탭"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f5c240e56c090615",
+    "type": "split",
+    "children": [
+      {
+        "id": "fc5b666989ed9322",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "317a74d119c00f13",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "380c34f9cddbb9b3",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "e6ed45c88fad3365",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "39bbc34678dcdcb1",
+    "type": "split",
+    "children": [
+      {
+        "id": "67b952556815c237",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2ac055f5f946111b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "백링크"
+            }
+          },
+          {
+            "id": "9764da7920d0dede",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "나가는 링크"
+            }
+          },
+          {
+            "id": "fec402457c81850f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "75b37ec5773592ba",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "8a2de4bf5a434438",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "개요"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false
+    }
+  },
+  "active": "c1e66fcc95bcf14f",
+  "lastOpenFiles": [
+    "26. 10. 07.md",
+    "Manifest/26. 10. 07.md",
+    "일일작업기록_템플릿.md",
+    "Manifest/작업기록.md",
+    "Manifest/무제.md",
+    "Manifest",
+    "GUI/Images/Pasted_image_20261007120937.png",
+    "GUI/Images/compare.png",
+    "GUI/Images/before_original.png",
+    "GUI/Images/after_v7.png",
+    "GUI/Images",
+    "GUI/2026-10-07 QA 피드백 반영 현황.md",
+    "GUI/2026-10-07 라벨링 프로그램 화면 변경 히스토리.md",
+    "GUI/2026-10-07 라벨링 프로그램 UI 개편 v7.md",
+    "GUI"
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "main": {
+    "id": "e1cd62183155df4a",
+    "type": "split",
+    "children": [
+      {
+        "id": "3fed0ac9dd7d9460",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e14ce1451ec6ec49",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 — Morphology·Contour와 규칙 기반 판정.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "3일차 — Morphology·Contour와 규칙 기반 판정"
+            }
+          },
+          {
+            "id": "c57dd0cca2937e44",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 1~3일차 연결 확장 실습 — IP Webcam + FastAPI 실시간 병뚜껑 검사.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "3일차 1~3일차 연결 확장 실습 — IP Webcam + FastAPI 실시간 병뚜껑 검사"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "e06d8d65c52442c9",
+    "type": "split",
+    "children": [
+      {
+        "id": "371e5179b9b5b6b0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "39506d96d19a3c32",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "d0680078bc87eab1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "91812aa0e44ce10b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "923e570cdfa764e4",
+    "type": "split",
+    "children": [
+      {
+        "id": "7a4c52eaced3efad",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8371e81b1202aceb",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "교과 7 프로젝트/Tkinter 기본 문법.md",
+                "collapseAll": true,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "백링크"
+            }
+          },
+          {
+            "id": "20109251a083ee47",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "나가는 링크"
+            }
+          },
+          {
+            "id": "8ae44ad14d626773",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "ba150209eb423a2b",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "d9688cd984983fa5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 1~3일차 연결 확장 실습 — IP Webcam + FastAPI 실시간 병뚜껑 검사.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "개요"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 228.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false
+    }
+  },
+  "active": "c57dd0cca2937e44",
+  "lastOpenFiles": [
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/4일차 — 객체 분리·Template·특징점 매칭.md",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 1~3일차 연결 확장 실습 — IP Webcam + FastAPI 실시간 병뚜껑 검사.md",
+    "교과 9 openCV 규칙기반 머신비전/images/Pasted_image_20261027135412.png",
+    "교과 9 openCV 규칙기반 머신비전/images/FastAPI_.png",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 — Morphology·Contour와 규칙 기반 판정.md",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 — 21코드 Jupyter로 코드 리뷰 방법.md",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/2일차 16코드 Jupyter로 코드 리뷰 방법.md",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/2일차 — Image Enhancement와 검사 이미지 품질 개선.md",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 데이터 이미지/Pasted image 20261027075028.png",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 데이터 이미지/Pasted image 20261026124213.png",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 데이터 이미지/Pasted image 20261025130648.png",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 데이터 이미지/Pasted image 20261027080218.png",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 데이터 이미지/day03/reference/cap_on_reference.jpg",
+    "교과 9 openCV 규칙기반 머신비전/10일 수업/3일차 데이터 이미지/day03/reference/cap_off_reference.jpg",
+    "교과 9 openCV 규칙기반 머신비전/교과 9. 머신비전 이론·실습.md",
+    "backEnd_2/7 CRUD 구현하기.md",
+    "AI 생성 코드 기반의 역공학·재구성 학습법/구체형_AI 생성 코드 기반의 역공학·재구성 학습법.md",
+    "backEnd_2/📅 Day 1 생성형 AI 개념 & Jupyter Notebook 기본/images/Pasted image 20250705222252.png",
+    "backEnd_2/📅 Day 1 생성형 AI 개념 & Jupyter Notebook 기본/images/Pasted image 20250705222247.png",
+    "backEnd_2/📅 Day 1 생성형 AI 개념 & Jupyter Notebook 기본/images",
+    "backEnd_2/📅 Day 1 생성형 AI 개념 & Jupyter Notebook 기본/01 생성형 AI 개념 & Jupyter Notebook 기본.md",
+    "backEnd_2/📅 Day 1 생성형 AI 개념 & Jupyter Notebook 기본/00 jupyter설치및 테스트.md",
+    "backEnd_2/📅 Day 1 생성형 AI 개념 & Jupyter Notebook 기본",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/용도별로 적합한 비동기 방식.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/기준 리뷰 1개 vs 후보 리뷰 여러 개를 하나씩 비교.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/images",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/30 기술문서 작성하기.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/29-3 도커나 쿠버네티스 사용할때 명령어 요약.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/29-2 쿠버네티스 실습하기.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/29-1 쿠버네티스(K8s).md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/28-5 모니터링 운영.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/28-4 모니터링.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/28-3 모니터링 대상 설계.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/28-2 Grafana 대시보드.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/28-1 모니터링 및 부하 테스트 - 메트릭.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/27 개발용과 배포용 파일정리.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/26 배포 운영 고도화.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/25-3 운영_ CD API 보안 강화.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)/25-2 운영_수동배포.md",
+    "backEnd_2/07 Django 심화 및 배포 실습(2026_03_26~2026_04_13 13일간)",
+    "backEnd_2/06 Django & FastAPI 기반 서비스 구축(2026_03_05~03_24 14일간)/images",
+    "backEnd_2/06 Django & FastAPI 기반 서비스 구축(2026_03_05~03_24 14일간)/1 fastAPI/images",
+    "backEnd_2/06 Django & FastAPI 기반 서비스 구축(2026_03_05~03_24 14일간)/1 fastAPI/3 fastAPI todo list 만들어보기(추가자료)",
+    "backEnd_2/06 Django & FastAPI 기반 서비스 구축(2026_03_05~03_24 14일간)/1 fastAPI/2 DRF+fastAPI",
+    "backEnd_2/06 Django & FastAPI 기반 서비스 구축(2026_03_05~03_24 14일간)/1 fastAPI/1 FastAPI Todo 관리 웹 서비스 만들기(FastAPI)",
+    "backEnd_2/06 Django & FastAPI 기반 서비스 구축(2026_03_05~03_24 14일간)/1 fastAPI/0 fastAPI-기본",
+    "무제.canvas"
+  ]
+}
